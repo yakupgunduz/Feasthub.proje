@@ -1,0 +1,152 @@
+Nyym sql kodları(DATABASE)
+---------------------------
+create table uyeler(
+kullanici_adi varchar(20) primary key,
+Sifre int,
+ipucu varchar(20),
+Ad_Soyad Varchar(50),
+Adres Varchar(300),
+Tel_No int
+);
+
+---------------------------
+CREATE TABLE Urunler (
+    Urun_id SERIAL PRIMARY KEY,
+    Isim VARCHAR(100),
+    Aciklama TEXT,
+    Fiyat NUMERIC(10, 2)
+);
+---------------------------
+CREATE TABLE Menuler (
+    Turu varchar(30)
+) INHERITS (Urunler);
+---------------------------
+CREATE TABLE Yemekler (
+    Yemek_Turu varchar(30)
+) INHERITS (Urunler);
+---------------------------
+CREATE TABLE Atistirmaliklar (
+	Atistirmaliklar_Turu varchar(30)
+) INHERITS (Urunler);
+---------------------------
+CREATE TABLE Tatlilar (
+    Tatli_Turu varchar(30)
+) INHERITS (Urunler);
+---------------------------
+CREATE TABLE Icecekler (
+    Icecek_Turu varchar(30)
+) INHERITS (Urunler);
+---------------------------
+CREATE TABLE siparis (
+    Siparis_id SERIAL PRIMARY KEY,
+    Kullanici_adi VARCHAR(20),
+	Durum Varchar(50),
+	Tutar int,
+    FOREIGN KEY (kullanici_adi) REFERENCES uyeler (kullanici_adi)
+);
+---------------------------
+CREATE TABLE detay (
+   	detay_id SERIAL PRIMARY KEY,
+   	urun_id int,
+	siparis_id int,
+	miktar int,
+	birim_fiyat numeric(10,2),
+	toplam_fiyat numeric(10,2),
+  	FOREIGN KEY (Urun_id) REFERENCES urunler (Urun_id),
+	FOREIGN KEY (siparis_id) REFERENCES siparis (siparis_id)
+);
+---------------------------
+CREATE TABLE odeme (
+    odeme_id SERIAL PRIMARY KEY,
+    odeme_yontemi varchar(50),
+    durum Varchar(50),
+    tutar numeric(10,2)
+);
+---------------------------
+CREATE TABLE siparis_odeme_tarihi(
+	siparis_id INT,
+    odeme_id INT,
+    tarih TIMESTAMP,
+    FOREIGN KEY (siparis_id) REFERENCES siparis(siparis_id),
+    FOREIGN KEY (odeme_id) REFERENCES odeme(odeme_id)
+);
+---------------------------
+Insert into Menuler (Urun_id,Isim,Aciklama,Fiyat,Turu)
+values ('1','Köfte+Tavuk Burger ','Tavuk Burger+ Köfte Burger + İçecek + Patates','120.00','Et&Tavuk sevenler için Menü'),
+('2','Double Köfte + Tavuk Burger','Double Köfte Burger + Tavuk Burger + İçecek + Patates','135.00','Ekonomik ve Doyurucu Menü'),
+('3','Double Çedarlı Köfte Burger','Köfte Burger + İçecek + Patates','125.00','Köftesever Menü'),
+('4','Çıtır Kova','But + İçecek + Tavuk Parçaları + Patates','250.00','Çıtır Tavuklarla Dolu Kova'),
+('5','Triple Burger','Koca Burger + İçecek + Patates Kızartması','150.00','Bol Köfteli sevenler için Menü'),
+('6','Double Cheeseburger','Cheeseburger + İçecek + Patates Kızartması','140.00','Cheddar sevenler için Menü'),
+('7','İkili Pizza Menü','Bol malzemeli 2 pizza + İçecek','220.00','Pizza sevenler için Menü'),
+('8','Hatay Usulü Tavuk Dürüm','Antakya Döner + Patates + İçecek','110.00','Döner sevenler için Menü'),
+('9','Eko Çıtır','Ekosandviç + 4 Kanat + İçecek + Patates Kızartması','120.00','Ekonomik Menü 1'),
+('10','Eko Tavuk','Ekoburger + 8 Tavuk Parçası + Patates + İçecek','120.00','Ekonomik Menü 2'),
+('11','İkili Fırsat Çıtır','2 Tavuk Burger + 2 İçecek + Tavuk Kova + Patates','300.00','2 Kişilik Menü'),
+('12','Çıtır Kanat','Kanat + Patates + İçecek + Tavuk Parçaları','150.00','Kanat Menü')
+---------------------------
+Insert into Yemekler (Urun_id,Isim,Aciklama,Fiyat,Yemek_Turu)
+values ('13','İskender','Yoğurt + İskender + Tereyağlı sos','130.00','Bursa İskenderi'),
+('14','Mantı','Sarımsaklı Yoğurtlu Mantı','100.00','Kayseri Mantısı'),
+('15','Çökertme Kebabı','Patatesli Yoğurtlu Kebap','150.00','Bodrum Usulü Çökertme Kebabı'),
+('16','Hünkar Beğendi','Patlıcanlı Et Yemeği','150.00','Osmanlı Usulü Hünkar Beğendi'),
+('17','Yaprak Sarması','Limonlu Sumaklı Ekşi sarma','60.00','Çorum Usulü Yaprak Sarma'),
+('18','İçli Köfte','Cevizli İçli Köfte','40.00','Kızartma Usulü İçli Köfte'),
+('19','Et Sote','100 gr Et + Krema',130.00','Kuzu Etiyle yapılır'),
+('20','Tavuk Alfredo','Parmesan peynirli Tavuklu Makarna','120.00','İtalyan lezzeti'),
+('21','Biftek','Odun Ateşiyle pişirilir','250.00','Steak Sevenler için'),
+('22','Çoban Kavurma','Et ve patatesli yemek','180.00','Malatya Usulü Çoban Kavurma'),
+('23','Yağlama','Sarımsaklı yoğurt kullanılır','200.00','Kayseri Usulü Yağlama'),
+('24','Karnıyarık','Odun Fırınında pişirilmiştir','120.00','Urfa Usulü Karnıyarık')
+---------------------------
+Insert into Atistirmaliklar (Urun_id,Isim,Aciklama,Fiyat,Atistirmaliklar_Turu)
+values('25','Patates Kızartması','60 gr Kızarmış Patates','20.00','Özel Baharatlı Patates'),
+('26','Nuggets','6 adet Nugget','30.00','Çıtır Nugget'),
+('27','Soğan Halkası','5 adet Soğan Halkası','15.00','Çıtır Soğan Halkası'),
+('28','Karışık Kızartma','Nuggets + Patates + Soğan Halkası','50.00','Fastfood sevenler için'),
+('29','Kaşarlı Tost','Yanında Salata ile','40.00','Kahvaltılık arayanlar için'),
+('30','Karışık Tost','Yanında Salata ve Patates ile ','60.00','Kahvaltılık arayanlar için'),
+('31','Kavurmalı Tost','Erzurum Kavurması Kullanılır','80.00','Kavurma sevenler için'),
+('32','Börek Tabağı','Tamamen el yapımıdır','45.00','Kahvaltılık arayanlar için');
+---------------------------
+Insert into Tatlilar (Urun_id,Isim,Aciklama,Fiyat,Tatli_Turu)
+values('33','Künefe','Hataydan gelen bol peynirli lezzet','60.00','Hatay Usulü Künefe'),
+('34','Cheesecake','Limonlu ve Frambuazlı mevcuttur','50.00','Sütlü tatlı sevenler için'),
+('35','Trileçe','Kahveli ve Frambuazlı Mevcuttur','50.00','Sütlü tatlı sevenler için'),
+('36','Tiramisu','İtalyan tatlısı','50.00','Sütlü tatlı sevenler için'),
+('37','Magnolya','Çilek ve Muz içerir','60.00','Meyveli Tatlı sevenler için'),
+('38','Mozaik Pasta','Bisküvitli Pasta','35.00','Geleneksel lezzet'),
+('39','Brownie','orman meyveleri içerir','55.00','Yoğun çikolata sevenler için'),
+('40','Supangle','Eker ürünüdür','35.00','Paketli Tatlı'),
+('41','Baklava','Fıstıklı Bulunur','80.00','Antepten gelmektedir'),
+('42','Kadayıf','Ceviz Ve Badem içerir','60.00','Diyarbakırdan gelmektedir'),
+('43','Dondurma','Vanilyalı ve Çikolatalı tek bulunur','50.00','Maraştan Gelmektedir'),
+('44','Sütlaç','Odun fırınında pişirilir','50.00','Sütlü Tatlı sevenler için')
+---------------------------
+Insert into Icecekler (Urun_id,Isim,Aciklama,Fiyat,Icecek_Turu)
+values
+('45','Sprite','Standart Boy 330 ml', '30.00','Gazoz'),
+('46','CocaCola','Standart Boy 330 ml','30.00','Kola'),
+('47','Fanta','Standart Boy 330 ml','30.00','Fanta'),
+('48','Ice Tea Şeftali', 'Standart Boy 330 ml','30.00','Soğuk Çay'),
+('49','Ice Tea Şeftali', 'Standart Boy 330 ml','30.00','Soğuk Çay'),
+('50','Ice Tea Şeftali', 'Standart Boy 330 ml','30.00','Soğuk Çay'),
+('51','Cappy Vişne','Standart Boy 330 ml','30.00','Meyve Suyu'),
+('52','Cappy Şeftali','Standart Boy 330 ml','30.00','Meyve Suyu'),
+('53','Cappy Karışık','Standart Boy 330 ml','30.00','Meyve Suyu'),
+('54','Su','Erikli 500 ml','7.00','Su'),
+('55','Ayran','Standart Boy 300 ml','20.00','Ayran'),
+('56','Redbull','Standart Boy 200 ml','40.00','Enerji İçeceği')
+---------------------------
+create table kampanyalar(
+kampanya_kodu varchar(15) primary key,
+aciklama varchar(200),
+indirim_orani int);
+---------------------------
+insert into kampanyalar(kampanya_kodu,aciklama,indirim_orani)
+values
+('feasthub45','Üyelerimize ilk 45 gün içinde kullanabilecekleri %20 indirim','20'),
+('feasthubmrsln5','5 siparişi geçen üyelerimize özel %30 indirim','30'),
+('feasthubrykp3','3 siparişi geçen üyelerimize özel %15 indirim','15'),
+('feasthubtrk1gd0','10 siparişi geçen üyelerimize özel %50 indirim','50'),
+('hubogrenci25','öğrencilere özel menülerde geçerli %25 kampanya','25')
